@@ -53,7 +53,7 @@ export async function createReview(
 
 export async function getRecentReviews(limit: number = 10): Promise<Review[]> {
   try {
-    const [rows] = await pool.execute<RowDataPacket[]>(
+    const [rows] = await pool.query<RowDataPacket[]>(
       `SELECT id, technician, DATE_FORMAT(review_date, '%Y-%m-%d') as review_date,
               address, review_type, amount, company, customer_name, paid, created_at
        FROM reviews

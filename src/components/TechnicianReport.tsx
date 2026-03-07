@@ -87,6 +87,7 @@ export default function TechnicianReport() {
               <thead>
                 <tr className="border-b border-gray-200">
                   <th className="text-left py-2 px-2 font-medium text-gray-500">Date</th>
+                  <th className="text-left py-2 px-2 font-medium text-gray-500">Customer</th>
                   <th className="text-left py-2 px-2 font-medium text-gray-500">Address</th>
                   <th className="text-left py-2 px-2 font-medium text-gray-500">Type</th>
                   <th className="text-right py-2 px-2 font-medium text-gray-500">Amount</th>
@@ -100,6 +101,7 @@ export default function TechnicianReport() {
                     <td className="py-2 px-2 text-gray-600">
                       {format(new Date(r.review_date + 'T00:00:00'), 'MMM d, yyyy')}
                     </td>
+                    <td className="py-2 px-2 text-gray-600">{r.customer_name || '—'}</td>
                     <td className="py-2 px-2 text-gray-600 max-w-[180px] truncate">{r.address}</td>
                     <td className="py-2 px-2">
                       <span className="inline-flex items-center gap-1 text-gray-600">
@@ -143,6 +145,9 @@ export default function TechnicianReport() {
               <div key={r.id} className="bg-gray-50 rounded-lg p-3 space-y-1">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
+                    {r.customer_name && (
+                      <div className="text-sm font-medium text-gray-900">{r.customer_name}</div>
+                    )}
                     <div className="text-sm text-gray-600">{r.address}</div>
                     <div className="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
                       <span>{format(new Date(r.review_date + 'T00:00:00'), 'MMM d, yyyy')}</span>
