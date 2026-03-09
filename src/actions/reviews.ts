@@ -99,6 +99,48 @@ export async function togglePaid(reviewId: number, paid: boolean): Promise<boole
   }
 }
 
+export async function updateReview(
+  reviewId: number,
+  data: {
+    technician: string;
+    review_date: string;
+    address: string;
+    review_type: string;
+    company: string;
+    customer_name: string | null;
+  }
+): Promise<{ success: boolean; message: string }> {
+  if (!data.technician || !TECHNICIANS.includes(data.technician as typeof TECHNICIANS[number])) {
+    return { success: false, message: 'Invalid technician.' };
+  }
+  if (!data.review_date) {
+    return { success: false, message: 'Please select a date.' };
+  }
+  if (!data.address || data.address.trim().length === 0) {
+    return { success: false, message: 'Please enter an address.' };
+  }
+  if (!data.review_type || !(data.review_type in REVIEW_TYPES)) {
+    return { success: false, message: 'Invalid review type.' };
+  }
+  if (!data.company || !COMPANIES.includes(data.company as typeof COMPANIES[number])) {
+    return { success: false, message: 'Invalid company.' };
+  }
+
+  const amount = REVIEW_TYPES[data.review_type as keyof typeof REVIEW_TYPES].amount;
+
+  try {
+    await pool.execute(
+      `UPDATE reviews SET technician = ?, review_date = ?, address = ?, review_type = ?, amount = ?, company = ?, customer_name = ? WHERE id = ?`,
+      [data.technician, data.review_date, data.address.trim(), data.review_type, amount, data.company, data.customer_name?.trim() || null, reviewId]
+    );
+    revalidatePath('/');
+    return { success: true, message: 'Review updated successfully!' };
+  } catch (error) {
+    console.error('Failed to update review:', error);
+    return { success: false, message: 'Failed to update review. Please try again.' };
+  }
+}
+
 export async function getWeeklyReport(weekStartDate: string): Promise<WeeklyReportRow[]> {
   const weekStart = startOfWeek(new Date(weekStartDate + 'T00:00:00'), { weekStartsOn: 1 });
   const weekEnd = endOfWeek(new Date(weekStartDate + 'T00:00:00'), { weekStartsOn: 1 });
