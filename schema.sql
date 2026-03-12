@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS reviews (
   company ENUM('Premium', 'BSD', 'Rocky', 'Best Pro') NOT NULL,
   customer_name VARCHAR(255),
   paid BOOLEAN NOT NULL DEFAULT FALSE,
+  posted BOOLEAN NOT NULL DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_tech_date (technician, review_date),
   INDEX idx_review_date (review_date)
